@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer {
-    private Integer customerId;
-    private String customerName;
+    private Integer id;
+    private String firstName;
 }

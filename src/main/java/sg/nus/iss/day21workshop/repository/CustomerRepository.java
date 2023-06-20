@@ -31,8 +31,8 @@ public class CustomerRepository {
         SqlRowSet rs = template.queryForRowSet(sql, limit, offset);
         while(rs.next()){
         Customer customer = new Customer();
-        customer.setCustomerId(rs.getInt("CustomerID"));
-        customer.setCustomerName(rs.getString("CustomerName"));
+        customer.setId(rs.getInt("id"));
+        customer.setFirstName(rs.getString("first_name"));
         customerList.add(customer);
         }
         return (Collections.unmodifiableList(customerList));
@@ -55,7 +55,7 @@ public class CustomerRepository {
 
     public Customer getCustomerById(int id) {
         Customer customer = new Customer();
-        customer = template.queryForObject("select * from customers where CustomerID = ?",
+        customer = template.queryForObject("select * from customers where id = ?",
                 BeanPropertyRowMapper.newInstance(Customer.class), id);
         return customer;
     }
@@ -73,8 +73,8 @@ public class CustomerRepository {
             //set the parameters to be put into sql INSERT statement, will throw error if cannot execute.
             @Override
             public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
-                ps.setInt(1, customer.getCustomerId());
-                ps.setString(2, customer.getCustomerName());
+                ps.setInt(1, customer.getId());
+                ps.setString(2, customer.getFirstName());
                 return ps.execute();
             }
         });
