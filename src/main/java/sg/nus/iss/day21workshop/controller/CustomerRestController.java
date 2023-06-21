@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 
 import jakarta.json.Json;
 import sg.nus.iss.day21workshop.model.Customer;
@@ -23,7 +24,7 @@ public class CustomerRestController {
     CustomerService svc;
 
     //change to service
-    @GetMapping(path = "/customers", consumes = "application/json")
+    @GetMapping(path = "/customers")
     public ResponseEntity<String> getAllCustomers(@RequestParam(defaultValue = "0") Integer offset,
             @RequestParam(defaultValue = "5") Integer limit) {
         Optional<List<Customer>> opt = svc.getCustomers(limit, offset);
@@ -36,15 +37,12 @@ public class CustomerRestController {
         return ResponseEntity.ok(opt.get().toString());
     }
 
-    @GetMapping(path = "/customers/{id}", consumes = "application/json")
-    public ResponseEntity<String> getCustomerById(@PathVariable int id) {
-        Optional<Customer> opt = svc.getCustomerById(id);
-
-        if (opt.isEmpty()) {
-            return ResponseEntity.status(404).body(
-                    Json.createObjectBuilder().add("message", "Customer " + id + " not found").build().toString());
+    @GetMapping(path = "/customers/{id}")
+    public Customer getCustomerById(@PathVariable int id) {
+        Customer customer = svc.getCustomerById(id);
+        if (customer == null) {
+            throw new ResourceAccessException("Customer not found.");
         }
-
-        return ResponseEntity.ok(opt.get().toString());
+        return customer;
     }
 }

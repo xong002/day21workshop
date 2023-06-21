@@ -25,12 +25,7 @@ public class CustomerService {
         }
     }
 
-    public Optional<Customer> getCustomerById(int id) {
-        try {
-            return Optional.of(repo.getCustomerById(id));
-        } catch (EmptyResultDataAccessException ee) {
-            ee.printStackTrace();
-            return Optional.empty();
-        }
+    public Customer getCustomerById(int id) {
+        return repo.getCustomerById(id);
     }
 }
